@@ -1,0 +1,468 @@
+/* 영문 구글폰트 Poppins 추가 */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+/* 한글 구글폰트 Noto Sans KR 추가 */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600&family=Poppins:wght@400;500;600&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    /* 앞쪽의 폰트부터 우선 적용 */
+    font-family: 'Poppins', 'Noto Sans KR', 'Malgun Gothic', '맑은 고딕', sans-serif;
+}
+
+:root {
+    /* Dark them color variables */
+    --text-color: #edf3ff;
+    --subheading-color: #97a7ca;
+    --placeholder-color: #c3cdde;
+    --primary-color: #101623;
+    --secondary-color: #283045;
+    --secondary-hover-color: #333e58;
+    --scrollbar-color: #626a7f:
+}
+
+body {
+    color: var(--text-color);
+    background: var(--primary-color);
+
+}
+
+
+/*****************************************************/
+/*                      Container                    */
+/*****************************************************/
+.container {
+    padding: 32px 0 60px;
+    /* size 속성이 없는 경우 디폴트값은 각각 다르다 */
+    /* width 설정이 없는 경우 → 기본값: auto → 부모의 100%  */
+    /* height 설정이 없는 경우 → 기본값: auto → 자식요소의 높이에 맞춤, 자식요소가 없으면 0 */
+    /* 세로 스크롤이 필요할 때만 스크롤바 표시 */
+    overflow-y: auto;
+    /* 화면 높이에서 127px을 뺀 만큼만 최대 높이를 주고, 넘치면 스크롤 */
+    max-height: calc(100vh - 127px);
+    /* 스크롤바 손잡이 색상과 트랙(배경) 색상 지정 */
+    scrollbar-color: var(--scrollbar-color) transparent; 
+}
+
+
+/* 특이성이 0으로 가장 낮은 where()를 사용하여 ()안의 모든 요소에 밑그림으로 적용. 이후 재정의시 덮어쓰기 가능함 */
+.container :where(.app-header, .suggestions, .message, .prompt-wrapper, .disclaimer-text) {
+    /* 사이즈 원칙 1: % 값, vw, vh (뷰포트 기준값), 상대적 단위 (em, rem) 등은 상위요소의 크기에 따라 조절됨 */
+    /* 사이즈 원칙 2: 명시적 width 설정이 없으면 기본값으로 부모의 100%를 차지하는 것이 CSS의 기본 동작입니다! */
+    margin: 0 auto;
+    width: 100%; 
+    padding: 0 20px;
+    max-width: 980px;
+}
+
+/* 1024x768 웹표준해상도에서 980px을 컨테이너의 max값으로 사용하는 이유
+- 화면 너비: 1024px
+- 스크롤바: 17px
+- 여백: 27px
+= 사용 가능 너비: 980px */
+ 
+/* 클래스를 공백으로 연결하면 앞의 부모클래스위에 뒤의 자식클래스 디자인이 덮어쓰기가 된다. */
+/* 특이성 점수가 부모 클래스보다 증가하므료 */
+.container .app-header {
+    margin-top:4vh;
+}
+
+/* subheading에 대한 폰트지정은 없지만 h2의 경우 기본적으로 1.5em (24px) 크기 */
+
+.app-header .heading {
+    /* 대부분의 브라우저는 명시적으로 지정하지 않으면 16px을 기본으로 사용 */
+    font-size: 3rem;
+    width: fit-content;
+
+    /* 텍스트에 그라데이션 효과 적용 */
+    background: linear-gradient(to right, #1d7dfd, #8f6fff);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.app-header .sub-heading {
+    font-size: 2.6rem;
+    /* h1의 기본 폰트사이즈가 3rem이며, 마진값은 0.67em이므로 32.16px이 h1의 margin-bottom이 된다. 그 바로 밑에 위치한 sub-heading은 h1영역으로 -5px만큼 중첩되어 침범한다. */
+    margin-top: -5px;
+    color: var(--subheading-color);
+}
+
+/*****************************************************/
+/*                 Suggestions List                  */
+/*****************************************************/
+/* 자식클래스는 부모클래스까지 함께 명시하여 높은 점수를 받도록 해야함 */
+/* 마치 부모의 밑그림에 자식은 덧칠을 하는 컨셉으로 자식쪽에 우선순위가 부여됨 */
+/* 특이성 계산: 0,0,2,0 = .container: 0,0,1,0, + .suggestions: 0,0,1,0 */
+.container .suggestions {
+    display: flex;
+    gap: 15px; 
+    overflow-x: auto; /* 가로 방향(수평) 스크롤을 자동으로 처리 */
+    margin-top: 9.5vh;
+    list-style: none; /* 글머리기호 점(•) 제거 */
+    scrollbar-width: none; /* 스크롤바 너비 제거를 하여 화면에 스크롤바가 보이지 않게 함 */
+
+}
+
+
+/***************** 대화창 외에는 모두 숨기기 *****************/
+
+/* where 적용시 특이성 계산: .container만 계산, :where() 안은 0점부여하여 무시 */
+/* 결과: 0,0,1,0 */
+/* is 적용시 특이성 계산: .container + :is() 안의 가장 높은 특이성 */
+/* 결과: 0,0,2,0 = app-header: 0,0,1,0 + .suggestions: 0,0,1,0 */
+/* 바로 위의 .container .suggestions와 특이성 점수 2점과 동점이지만 나중에 선언되었으므로 덮어쓰게 됨 */
+/* where는 밑그림으로 적용, is는 덮어쓰기로 적용 */
+.container :is(.app-header, .suggestions) {
+    display: none;
+}
+/*****************************************************/
+
+/* 
+    flex-direction: column; -> 세로방향(열)으로 주축 설정
+
+    justify-content (주축 방향 요소 배치)
+    - 방향: flex-direction에 따라 결정되는 주축 방향
+    - 역할: 주축을 따라 요소들을 배치
+
+    align-items (교차축 방향 요소 배치)
+    - 방향: 주축에 수직인 방향
+*/
+/* container suggestion로 밑그림을 칠한 후, suggestion에 덧칠을 할 때는 부모클래스인 container는 생략하고 자식클래스만 포함시킨다. 이렇게 하면 자식의 특이성 점수가 2점으로 부모와 동점이지만, 나중에 선언되었으므로 덮어쓰게 된다. 
+*/
+.suggestions .suggestion-item {  
+    width: 228px;
+    padding: 18px;
+    flex-shrink: 0; /* 콘텐츠가 줄어들지 않도록 방지 */
+    display: flex;
+    cursor: pointer; /* 마우스 커서를 손가락  포인터로 변경(클릭가능한 요소) */
+    flex-direction: column; /* 세로방향(열)으로 주축 설정 */
+    align-items: flex-end; /* 요소들을 오른쪽 끝에 붙여서 정렬 */
+    justify-content: space-between;/* 첫 번째는 위, 마지막은 아래, 사이는 균등 분배 */
+    border-radius: 12px;
+    background: var(--secondary-color);  
+    transition: 0.3s ease; /* 이 요소에 적용되는 모든 속성 변화에 적용 (배경색, 크기, 위치 등) -> 0.3초동안 부드럽게 변화 */
+}
+
+.suggestions .suggestion-item .text {
+    font-size: 1.1rem;
+}
+
+.suggestions .suggestion-item:hover {
+    background:var(--secondary-hover-color)
+
+}
+
+.suggestions .suggestion-item span {
+    height: 45px;
+    width: 45px;
+    margin-top: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    color: #1d7efd;
+    background: var(--primary-color); 
+
+}
+
+
+.suggestions .suggestion-item:nth-child(2) span {
+    color: #28a745;
+}
+
+.suggestions .suggestion-item:nth-child(3) span {
+    color: #ffc107;
+}
+
+.suggestions .suggestion-item:nth-child(4) span {
+    color: #6f42c1;
+}
+
+/*****************************************************/
+/*                   Chats Container                 */
+/*****************************************************/
+
+.container .chats-container {
+    display: flex;
+    gap:20px;
+    flex-direction: column;
+}
+
+.chats-container .message {
+    display: flex;
+    gap: 11px; 
+    align-items: flex-start;  /* flex-start로 해야만 avartar가 채팅응답 영역의 맨윗줄과 맞춰 정렬됨 */
+}
+
+.chats-container .message .message-text {
+    padding: 3px 16px;
+    word-wrap: break-word; /* 긴 단어나 긴 URL 등. 자동 줄바꿈 적용 */
+    white-space: pre-line; /* preserve + line : 줄바꿈만 허용옵션 (사용자가 입력한 수동 줄바꿈 기호(\n)는 적용하고, 그 외 사항은 비적용. 단, 공백은 1개까지만 적용) */
+}
+
+.chats-container .user-message {
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.chats-container .bot-message .avartar {
+    height: 43px;
+    width: 43px;
+    padding: 6px;
+    margin-right: -7px; 
+    border-radius: 50%;
+    background: var(--secondary-color);
+    border: 1px solid var(--secondary-color)
+}
+ 
+/* 로딩 애니메이션 적용 */
+/* 띄어쓰기가 있으면 하위 클래스,띄어쓰기 없이 연속하면 동시적용 클래스 */
+.chats-container .bot-message.loading .avartar {
+    /* 3초동안 선형으로 360도 회전 */
+    animation: rotate 3s linear infinite;
+}
+
+/* @keyframes: CSS 애니메이션의 키프레임을 정의하는 규칙 */
+@keyframes rotate {
+    /* 100%: 애니메이션이 완료되었을 때의 상태 --> 생략가능 */
+    /* transform: rotate(360deg): 360도 회전 */
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* message클래스의 구별된 별칭인 user-message에게만 적용 */
+.chats-container .user-message .message-text {
+    padding: 12px 16px;
+    max-width: 75%;
+    border-radius: 13px 13px 3px 13px;
+    background: var(--secondary-color);
+}
+
+
+/*****************************************************/
+/*                  Prompt Container                 */
+/*****************************************************/
+/* 뷰포트:  웹페이지가 실제로 보이는 브라우저 창의 영역으로서 스크롤바, 주소창, 북마크바 등을 제외한 실제 콘텐츠 영역 */
+.prompt-container {
+    /* fixed: 뷰포트(화면)를 기준으로 위치가 고정됩니다
+스크롤해도 항상 같은 위치에 고정 */
+    /* z-index로 레이어 순서를 조절할 수 있음 */
+    position: fixed;
+    bottom: 0; /* 뷰포트 하단에 고정 */
+    left: 0; /* 뷰포트 왼쪽에 고정 */
+    width: 100%; /* 뷰포트 너비만큼 너비 설정 */
+}
+
+/* prompt-container의 모든 하위 클래스를 where()의 ()안에 넣어서 동일하게 적용 */
+/* display 속성은 레이아웃 관련 속성이라서 상속이 안되므로, 부모, 자식 모두 각각 적용하고자 where(부모, 자식)을 사용 */
+/* 레이아웃이나 박스 모델과 같이 요소 자체의 구조나 형태를 결정하는 속성들은 상속이 안됨 */
+.prompt-container :where(.prompt-wrapper, .prompt-form, .prompt-actions) {
+    display: flex;
+    gap: 12px;
+    height: 56px;
+    align-items: center; 
+}
+
+/* prompt-from에 대해서만 배경색을 별도 적용하여 입력창임을 표시 */
+.prompt-wrapper .prompt-form{
+    width: 100%;
+    height: 100%; /* input창이 버튼의 높이를 부모요소인 wrapper의 높이와 동일하게 설정하면 모두들 일직선 상에 놓이게 된다. 통일성 있게 보인다 */
+    border-radius: 130px;
+    background: var(--secondary-color);
+}
+
+.prompt-form .prompt-input{
+    height: 100%;
+    width: 100%;
+    background: none;
+    outline: none;
+    border: none;
+    font-size: 1rem; 
+    padding-left: 24px;
+    color: var(--text-color);
+} 
+
+.prompt-form .prompt-input::placeholder{
+    color: var(--placeholder-color);
+}
+
+.prompt-wrapper button {
+    width: 56px; 
+    height: 100%; /* button 높이를 부모요소인 wrapper의 높이만큼 설정하면 input창과 버튼이 통일성 있게 보인다. 일직선 상에 놓이게 된다. 통일성 있게 보인다 */
+    border: none;
+    cursor: pointer;
+    border-radius: 50%;
+    font-size: 1.4rem;
+    flex-shrink: 0;
+    color: var(--text-color);
+    background: var(--secondary-color);
+    transition: 0.3s ease;
+}
+
+.prompt-wrapper button:hover{
+    background: var(--secondary-hover-color);
+}
+
+/* actions 영역 안에 내부버튼 2개(파일첨부, 전송)가 들어있음 */
+.prompt-form .prompt-actions{
+    gap: 5px; /* 버튼 사이 간격 설정 */
+    margin-right: 7px; /* 버튼 오른쪽 마진 설정 */
+}
+
+/* prompt 입력폼 안의 내부버튼은 좀 작은 사이즈가 되도록 사이즈 규정을 덧입힘 */
+.prompt-form .prompt-actions button{
+    height: 45px;
+    width: 45px;
+}
+
+.prompt-form #send-prompt-btn{
+    background: #0264e3;
+}
+
+/* 폼요소에서 사용가능한 valid 가상 클래스를 이용하여, 유효한 입력에만 전송버튼이 보이도록 설정 */
+/* ~는 일반형제 선택자: 형제 요소 중에서 뒤에 오는 모든 요소전체를 의미 (선택대상)
+/* ~ 뒤에 기입한 요소를 최종선택 */ 
+.prompt-form .prompt-input:valid ~ .prompt-actions #send-prompt-btn {
+    display: block; /* 유효할 때만 전송버튼 표시 */
+}
+
+/* 기본적으로 전송버튼 숨김 */
+.prompt-form .prompt-actions #send-prompt-btn {
+    display: none;
+}
+
+.prompt-form #send-prompt-btn:hover{
+    background: #1d7efd;
+}
+.prompt-wrapper .disclaimer-text {
+    text-align: center;
+    font-size: 0.9rem;
+    padding: 16px, 20px, 0; /* 상단, 좌우, 하단 패딩 설정 */
+    color: var(--placeholder-color);
+}
+
+/* style.css에 추가 */
+.chats-container .message .message-text .numbered-item {
+    display: flex;
+    margin: 4px 0;
+    align-items: flex-start;
+}
+
+.chats-container .message .message-text .numbered-item .number {
+    min-width: 24px;
+    font-weight: bold;
+    color: #4a9eff;
+    flex-shrink: 0; /* 번호가 줄어들지 않도록 */
+}
+
+.chats-container .message .message-text .numbered-item .content {
+    flex: 1;
+    line-height: 1.5;
+}
+
+.chats-container .message .message-text ol {
+    margin: 8px 0;
+    padding-left: 24px;
+}
+
+.chats-container .message .message-text ol li {
+    margin: 4px 0;
+    line-height: 1.5;
+}
+
+/* 번호 목록 스타일링 */
+.chats-container .message .message-text .numbered-item {
+    display: flex;
+    margin: 4px 0;
+    align-items: flex-start;
+    padding-left: 0;
+}
+
+.chats-container .message .message-text .numbered-item .number {
+    min-width: 32px;
+    font-weight: bold;
+    color: #4a9eff;
+    flex-shrink: 0;
+}
+
+.chats-container .message .message-text .numbered-item .content {
+    flex: 1;
+    line-height: 1.5;
+}
+
+/* 불릿 목록 스타일링 */
+.chats-container .message .message-text .list-item {
+    margin: 4px 0;
+    padding-left: 16px;
+    line-height: 1.5;
+}
+
+/* 구분선 스타일링 */
+.chats-container .message .message-text hr {
+    border: none;
+    border-top: 1px solid #333e58;
+    margin: 12px 0;
+}
+
+/* 강조 텍스트 스타일링 */
+.chats-container .message .message-text strong {
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.chats-container .message .message-text em {
+    font-style: italic;
+    color: #c3cdde;
+}
+
+/* 코드 블록/인라인 코드 스타일 */
+.chats-container .message .message-text pre {
+    background: #0d1117; /* 더 어두운 딥 다크 톤 */
+    padding: 10px 12px;
+    border-radius: 8px;
+    overflow-x: auto;
+    line-height: 1.5;
+    margin: 8px 0;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-size: 0.95rem;
+    border: 1px solid #21262d;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02);
+}
+.chats-container .message .message-text code {
+    background: #0d1117; /* 더 어두운 딥 다크 톤 */
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+/* pre 안의 code는 별도 패딩/배경을 주지 않음 (겹침 방지) */
+.chats-container .message .message-text pre code {
+    background: transparent;
+    padding: 0;
+}
+
+/* 인라인 코드만 배경/패딩 적용 */
+.chats-container .message .message-text :not(pre) > code {
+    background: #0d1117;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+/* 기존 CSS에 h4 스타일 추가 */
+.chats-container .message .message-text h1,
+.chats-container .message .message-text h2,
+.chats-container .message .message-text h3,
+.chats-container .message .message-text h4 {
+    margin: 8px 0 4px 0;
+    color: #4a9eff;
+    font-weight: 600;
+}
+
+.chats-container .message .message-text h4 {
+    font-size: 1.1rem;
+    margin: 6px 0 3px 0;
+}
+
