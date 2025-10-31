@@ -17,7 +17,7 @@ const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-
 
 // 사용자의 입력과 bot의 대답을 저장하는 배열: 초기화 
 let userMessage = "";
-const chatHistory = [];
+const chatHistory = []; // 대화내용이 실수로 덮어쓰여지지 않도록 재할당 재선언 안되는 const로 선언
 
 // div로 감싸서 빈껍데기 응답요소를 생성
 // 수집: 나머지 매개변수(...)는 함수 매개변수에서 나머지 인수들을 배열로 수집
@@ -253,5 +253,5 @@ const handleFormsubmit = (e) => {
 }
 
 
-// 이벤트 리스너에 아밴투핸들러 콜백함수를 등록 
+// 이벤트 리스너에 아밴투핸들러 콜백함수를 등록 --> 엔트리
 promptForm.addEventListener("submit", handleFormsubmit);
