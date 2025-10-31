@@ -1,10 +1,11 @@
 const container = document.querySelector(".container")
+
 // 채팅창 전체를 감싸는 .chats-container 클래스 가진 요소 중 첫 번째를 찾음
 const chatsContainer = document.querySelector(".chats-container")
 // 사용자의 입력창인 .prompt-input 클래스를 가진 요소 중 첫 번째를 찾음
 const promptForm = document.querySelector(".prompt-form");
 // .prompt-form 클래스를 가진 요소 안에서 .prompt-Input 클래스를 가진 첫 번째 요소를 찾음
-// document에서 찾는 것보다는 더 빠르고, 번지수가 한 눈에 보임.
+// 전체 document에서 찾는 것보다는 하위요소인 promptForm에서 차는 것이 더 빠르고, 번지수가 한 눈에 보임.
 const promptInput = promptForm.querySelector(".prompt-input");
 
 // .env 파일에서 API 키를 가져옴 (실 서비스에서는 .env 파일을 사용하여 환경변수를 관리)
@@ -33,7 +34,7 @@ const createMsgElement = (html, ...classes) => {
 
 // 화면전체(즉, container 클래스)의 스크롤을 최하단으로 내리는 함수
 const scrollToBottom = () => {
-    // scrollTop: 위 에서부터 얼마나 스크롤했는지" 픽셀 값. 스크롤 내리면 증가.
+    // scrollTop: 위에서 부터 얼마나 스크롤했는지(=scroll from top의 개념). 픽셀 값으로 측정. 스크롤 내리면 증가.
     // scrollTop을 scrollHeight로 맞추면 스크롤을 최하단으로 내린 상태가 됨
     // 대화가 증가할수록 scrollHeight도 증가하므로, 대화에 맞춰 스크롤을 계속 최하단으로 내리는 효과가 발생
     console.log('스크롤 시도:', container.scrollHeight, container.scrollTop);
@@ -163,6 +164,14 @@ const generateResponse = async (botMsgDiv) => {
         codeBlocks.forEach((html, i) => {
             tmpText = tmpText.replace(`__CODE_BLOCK_${i}__`, html);
         });
+
+        // 4.5) 보안상 기본 이스케이프는 유지하되, 안전하다고 판단한 일부 태그는 화이트리스트로 복원
+        // 모델이 직접 출력한 <strong>, <em>, <br>, <hr> 태그가 텍스트로 노출되는 문제를 해결
+        tmpText = tmpText
+            .replace(/&lt;\/?strong&gt;/g, (m) => m.replace('&lt;', '<').replace('&gt;', '>'))
+            .replace(/&lt;\/?em&gt;/g, (m) => m.replace('&lt;', '<').replace('&gt;', '>'))
+            .replace(/&lt;br\s*\/?&gt;/g, '<br>')
+            .replace(/&lt;hr\s*\/?&gt;/g, '<hr>');
 
         const responseText = tmpText;
 

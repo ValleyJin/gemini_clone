@@ -113,10 +113,10 @@ body {
 /* is 적용시 특이성 계산: .container + :is() 안의 가장 높은 특이성 */
 /* 결과: 0,0,2,0 = app-header: 0,0,1,0 + .suggestions: 0,0,1,0 */
 /* 바로 위의 .container .suggestions와 특이성 점수 2점과 동점이지만 나중에 선언되었으므로 덮어쓰게 됨 */
-/* where는 밑그림으로 적용, is는 덮어쓰기로 적용 */
+/* where는 밑그림으로 적용, is는 덮어쓰기로 적용
 .container :is(.app-header, .suggestions) {
     display: none;
-}
+} */
 /*****************************************************/
 
 /* 
